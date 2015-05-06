@@ -1,16 +1,33 @@
+# This functions reads the dataset assuming its in a folder called <Data>. it also writes a file called 
+# <cleaned_and_filtered_data.csv> it it doesnt exist. This files contains the cleaned and filtered dataset
+# and loads much faster since its much smaller. Need to have lubridate insta
+
 load_data <- function() {
+  library(lubridate)
+  if(file.exists("./Data/cleaned_and_filtered_data.csv")) {
+    data <- read.csv("./Data/cleaned_and_filtered_data.csv", row.names="X")
+  } else {
   colTypes = c("character", "character", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric")
-  data <- read.csv2('Data/household_power_consumption.txt', na.strings="?", colClasses=colTypes, skip=1, dec=".")
-  # Format: Date - dd/mm/yyyy | time - hh:mm:ss | 
-  
-  # Set column names
-  colnames(data) <- c("Date", "Time", "Global_active_power", "Global_reactive_power", "Voltage", 
-                      "Global_intensity", "Sub_metering_1", "Sub_metering_2", "Sub_metering_3")
+  data <- read.csv2('./Data/household_power_consumption.txt', na.strings="?", colClasses=colTypes, 
+                    header=TRUE, dec=".")
   
   # Convert date column to date objects
-  data$Date <- strptime(data$Date, format="%d/%m/%Y")
-  idx1 <- data$Date == strptime("2007-02-01", format="%Y-%m-%d")
-  idx2 <- data$Date == strptime("2007-02-02", format="%Y-%m-%d")
+  data$Date <- dmy(data$Date)
+  
+  # Make logicals and subset the data
+  idx1 <- data$Date == ymd("2007-02-01")
+  idx2 <- data$Date == ymd("2007-02-02")
   data2 <- data[idx1 | idx2,]
+  
+  # Create datetime column
+  data2$datetime <- ymd_hms(paste(data2$Date, data2$Time))
+  
+  # New row index
+  rownames(data2) <- 1:nrow(data2)
+  
+  # Write to file for easy loading
+  write.csv(data2, file="./Data/cleaned_and_filtered_data.csv")
+  
   return(data2)
+  }
 }
