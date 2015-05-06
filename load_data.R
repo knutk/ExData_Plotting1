@@ -4,8 +4,9 @@
 
 load_data <- function() {
   library(lubridate)
-  if(file.exists("./Data/cleaned_and_filtered_data.csv")) {
-    data <- read.csv("./Data/cleaned_and_filtered_data.csv", row.names="X")
+  if(file.exists("./Data/cleaned_and_filtered_data.rds")) {
+    data <- readRDS("./Data/cleaned_and_filtered_data.rds")
+    return(data)
   } else {
   colTypes = c("character", "character", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric")
   data <- read.csv2('./Data/household_power_consumption.txt', na.strings="?", colClasses=colTypes, 
@@ -26,7 +27,7 @@ load_data <- function() {
   rownames(data2) <- 1:nrow(data2)
   
   # Write to file for easy loading
-  write.csv(data2, file="./Data/cleaned_and_filtered_data.csv")
+  saveRDS(data2, "./Data/cleaned_and_filtered_data.rds", ascii=TRUE)
   
   return(data2)
   }
