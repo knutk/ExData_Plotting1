@@ -8,8 +8,8 @@ source('load_data.R')
 data <- load_data()
 
 # Make the plot and save the file to a .png file
+png(filename="plot2.png")
+
 plot(data$datetime, data$Global_active_power, type="l", ylab="Global Active Power (kilowatts)", xlab="")
 
-# Write to plot2.png
-dev.copy(png, file="plot2.png")
 dev.off()
