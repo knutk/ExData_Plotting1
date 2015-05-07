@@ -1,5 +1,5 @@
 # Plotting assignment 1 - Exploratory Data Analysis
-All scripts runs as is. The ´´´load_data()´´´ function loads the data provided it is in a directory called ´´´data´´´.
+All scripts runs as is. The `load_data()` function loads the data provided it is in a directory called `data`.
 
 ## My plots
 
